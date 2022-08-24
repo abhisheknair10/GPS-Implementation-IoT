@@ -13,8 +13,6 @@ The aim of this assignment is to:
 - Send the GPS coordinates data to a server hosted on the cloud
 - Serve workout data to a Run Analysis website
 
-A demonstration of the working system is available [here](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/LA2/Demonstration%20video.mp4).
-
 # 1. GPS Module
 
 ## 1.1. Adafruit GPS FeatherWing
