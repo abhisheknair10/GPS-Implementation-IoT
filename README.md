@@ -4,7 +4,7 @@
 
 The Internet of Things is the field of technology that deals with physical objects with computational capabilties, sensors and actuators that can connect to any form of network, including the internet, to exchange data with other devices, servers or the cloud.
 
-In brief, the code in [TouchyThing.ino](https://github.com/abhisheknair10/GPS-Implementation-IoT/-/blob/main/LA2/ProjectThing/ProjectThing.ino) acts as a workout tracker that can trace the location, pace and timing of a run based workout. 
+In brief, the code in [TouchyThing.ino](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/ProjectThing/ProjectThing.ino) acts as a workout tracker that can trace the location, pace and timing of a run based workout. 
 
 The aim of this assignment is to:
 - Receive GPS signals from GPS satellites using a GPS module
@@ -13,7 +13,7 @@ The aim of this assignment is to:
 - Send the GPS coordinates data to a server hosted on the cloud
 - Serve workout data to a Run Analysis website
 
-A demonstration of the working system is available [here](https://gitlab.com/anair11/com3505-student-2022/-/blob/main/LA2/Demonstration%20video.mp4).
+A demonstration of the working system is available [here](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/LA2/Demonstration%20video.mp4).
 
 # 1. GPS Module
 
@@ -41,9 +41,9 @@ The TX port of the GPS module is connected to the RX port of the ESP32 module. T
 
 As displayed below, the yellow wire is connected to the 3V supply, the brown wire is connected to Ground, and the blue wire is connected to the TX port of the GPS module and the RX port of the ESP32 microcontroller.
 
-![GPS Setup 1](https://gitlab.com/anair11/com3505-student-2022/-/raw/main/LA2/img3.png)
+![GPS Setup 1](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/img3.png)
 
-![GPS Setup 2](https://gitlab.com/anair11/com3505-student-2022/-/raw/main/LA2/img2.png)
+![GPS Setup 2](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/img2.png)
 
 For the LED lights, the red wire outputs a digital signal to the red LED light while the green wire outputs a digital signal to the green LED light.
 
@@ -83,7 +83,7 @@ if ((WiFi.status() == WL_CONNECTED)) {
 }
 ```
 
-The code that is deployed onto the microcontroller is available in [ProjectThing.ino](https://gitlab.com/anair11/com3505-student-2022/-/blob/main/LA2/ProjectThing/ProjectThing.ino).
+The code that is deployed onto the microcontroller is available in [ProjectThing.ino](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/ProjectThing/ProjectThing.ino).
 The code used is heavily influenced by the [Example Code](https://github.com/adafruit/Adafruit_GPS/blob/master/examples/GPS_HardwareSerial_Timing/GPS_HardwareSerial_Timing.ino) provided by Adafruit.
 
 # 2. Connecting to the Internet
@@ -163,7 +163,7 @@ Install Express.js:
 npm i -g express
 ```
 
-The application directory also consists of a [run.json](https://gitlab.com/anair11/com3505-student-2022/-/blob/main/LA2/ProjectThing/run.json) that stores run data along with the an array of recorded latitudes and longitudes.
+The application directory also consists of a [run.json](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/ProjectThing/run.json) that stores run data along with the an array of recorded latitudes and longitudes.
 
 ```json
 {
@@ -222,7 +222,7 @@ app.listen(port, () => {
 
 For more detailed documentation on setting up an Express.js application, check the [Express.js Official Documentation](https://expressjs.com/en/starter/hello-world.html) and helpful documentation by [Tutorials Point](https://www.tutorialspoint.com/nodejs/nodejs_express_framework.htm).
 
-The detailed code accepting and processing these requests is available in the file [app.js](https://gitlab.com/anair11/com3505-student-2022/-/blob/main/LA2/ProjectThing/app.js).
+The detailed code accepting and processing these requests is available in the file [app.js](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/ProjectThing/app.js).
 
 The Node.js file is run using the command:
 ```bash
@@ -240,11 +240,11 @@ pm2 logs
 
 # 4. Analysis Tool
 ## 4.1. Client-Side Website Developement
-The analysis tool is a client side website written in HTML5, CSS, and Vanilla JavaScript. The code is available [here](https://gitlab.com/anair11/com3505-student-2022/-/tree/main/LA2/ProjectThing/pages).
+The analysis tool is a client side website written in HTML5, CSS, and Vanilla JavaScript. The code is available [here](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/img1.png).
 
 An example of a workout under analysis:
 
-![Frontend](https://gitlab.com/anair11/com3505-student-2022/-/raw/main/LA2/img1.png)
+![Frontend](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/img1.png)
 
 The website is not served via the Internet due to certain restrictions set by the Google Maps JavaScript API regarding Client-Side requests.
 
@@ -290,4 +290,4 @@ const runPath = new google.maps.Polyline({
 runPath.setMap(map);
 ```
 
-Marking and plotting lines on the map in detail can be found in the [source code](https://gitlab.com/anair11/com3505-student-2022/-/tree/main/LA2/ProjectThing/pages/main.html).
+Marking and plotting lines on the map in detail can be found in the [source code](https://github.com/abhisheknair10/GPS-Implementation-IoT/blob/main/ProjectThing/pages/main.html).
