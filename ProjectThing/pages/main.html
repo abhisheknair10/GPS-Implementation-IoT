@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Rick and Morty</title>
+    <style>
+        *{
+            font-size: 15px;
+            background: rgb(0, 0, 0, 0);
+        }
+
+        h1 {
+            position: relative;
+            text-align: left;
+            color: black;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background-color: rgb(127, 133, 255);
+            font-size: 20px;
+        }
+
+        li {
+            position: relative;
+            top: 0px;
+            list-style: none;
+        }
+
+        ul {
+            top: 20px;
+        }
+
+        li select {
+            position: relative;
+            float: right;
+            right: 50%;
+            width: 30%;
+            height: 30px;
+            background-color: rgba(235, 235, 235, 0.75);
+        }
+
+        h2 {
+            display: inline-block;
+            position: relative;
+            padding: 0px 20px;
+            color: black;
+        }
+
+        #analyze-data {
+            position: relative;
+            bottom: 2em;
+            appearance: button;
+            background-color: #3350f3;
+            border-radius: 6px;
+            border-width: 0;
+            color: #fff;
+            height: 35px;
+            width: 15%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        #analyze-data:hover {
+            background-color: #0026ff;
+        }
+
+        #analysis-h1 {
+            position: relative;
+            top: 0rem;
+        }
+
+        #map {
+            position: relative;
+            height: 100%;
+        }
+
+        #run-time {
+            position: relative;
+            top: 0em;
+        }
+
+        #run-dist {
+            position: relative;
+            top: 0em;
+        }
+
+        #avg-spd {
+            position: relative;
+            top: 0em;
+        }
+
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4HsPaRbIFROeGpSFWdVhgwyni4WfM2MU"></script>
+</head>
+
+<!-------------------------------------------------------------------------------------------------->
+
+<body>
+    <h1>Track Your Runs</h1>
+    <div id = 'pickers'>
+        <ul>
+            <li>
+                <h2>Select Run</h2>
+                <select id = 'select-run'>
+                </select>
+                <h2 style = "position:relative;float: right;bottom: 5px;left:5em;">
+                    Run 1 consists of empty initializer data
+                </h2>
+            </li>
+        </ul>
+    </div>
+    <button id = 'analyze-data' type = 'button'>Analyse</button>
+    <h1 id = 'analysis-h1'>Results</h1>
+    <h2 id = "run-time">Run Time: 0 min 0 sec</h2>
+    <h2 id = "run-dist">Run Distance: 00.00 km</h2>
+    <h2 id = "avg-spd">Average Speed: 00.00 km/hr</h2>
+    <div id = "map" style="width:100%;height:500px;top:0rem;"></div>
+
+<!-------------------------------------------------------------------------------------------------->
+
+    <script>
+        var geocoder;
+        var map;
+
+        async function init() {
+            var getURL = 'http://176.58.116.164:3000/getNumRuns';
+            var res = await fetchAsync(getURL);
+            var select = document.getElementById('select-run');
+            for(let i = 0; i < res.numRuns; i++){
+                var option = document.createElement('option');
+                option.text = 'Run ' + String(i + 1);
+                option.value = i + 1;
+                select.add(option);
+            }
+        };
+
+        async function fetchAsync (url) {
+            let response = await fetch(url);
+            let data = await response.json();
+            return data;
+        };
+
+        function distance(lat1, lat2, lon1, lon2) {
+            // The math module contains a function
+            // named toRadians which converts from
+            // degrees to radians.
+            lon1 =  lon1 * Math.PI / 180;
+            lon2 = lon2 * Math.PI / 180;
+            lat1 = lat1 * Math.PI / 180;
+            lat2 = lat2 * Math.PI / 180;
+    
+            // Haversine formula
+            let dlon = lon2 - lon1;
+            let dlat = lat2 - lat1;
+            let a = Math.pow(Math.sin(dlat / 2), 2)
+                    + Math.cos(lat1) * Math.cos(lat2)
+                    * Math.pow(Math.sin(dlon / 2),2);
+                
+            let c = 2 * Math.asin(Math.sqrt(a));
+    
+            // Radius of earth in kilometers. Use 3956
+            // for miles
+            let r = 6371;
+    
+            // calculate the result
+            return parseFloat(c * r);
+        }
+
+        document.getElementById('analyze-data').onclick = async function() {
+            var runNum = document.getElementById('select-run').value;
+            var getURL = 'http://176.58.116.164:3000/analyze-run/' + runNum
+            console.log(getURL)
+            var res = await fetchAsync(getURL);
+
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 17,
+                center: new google.maps.LatLng(res.lat[0], res.lon[0]),
+                mapTypeId: "terrain",
+            });
+            
+            const runCoords = [];
+
+            for(let i = 0; i < res.lat.length; i++){
+                runCoords.push(
+                    {
+                        lat: res.lat[i],
+                        lng: res.lon[i]
+                    }
+                )
+            }
+
+            let time = res.lat.length * 1;
+            let mins = Math.floor(time/60);
+            let secs = ((parseFloat(time/60).toPrecision(2)) - mins) * 60;
+            document.getElementById("run-time").innerHTML = (
+                "Run Time: " + mins + " min " + parseInt(secs) + " sec"
+            );
+
+            let distancekm = 0.0;
+            let dinter = 0.0;
+
+            for(let j = 0; j < res.lat.length-1; j++){
+                dinter = parseFloat(distance(
+                    parseFloat(res.lat[j]),
+                    parseFloat(res.lat[j+1]), 
+                    parseFloat(res.lon[j]), 
+                    parseFloat(res.lon[j+1])
+                )).toPrecision(4);
+                distancekm = distancekm + parseFloat(dinter);
+            }
+
+            document.getElementById("run-dist").innerHTML = (
+                "Run Distance: " + String(parseFloat(distancekm).toPrecision(3)) + " kilometers"
+            );
+
+            document.getElementById("avg-spd").innerHTML = (
+                "Average Speed: " + parseFloat(distancekm*1000/time).toPrecision(2) + " metres/sec"
+            )
+
+            const runPath = new google.maps.Polyline({
+                path: runCoords,
+                geodesic: true,
+                strokeColor: "#e34444",
+                strokeOpacity: 1.0,
+                strokeWeight: 4,
+            });
+            
+            runPath.setMap(map);
+        };
+
+        window.addEventListener('load', function() {
+            init();
+        })
+    </script>
+</body>
+</html>
